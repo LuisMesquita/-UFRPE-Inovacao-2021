@@ -1,6 +1,6 @@
 import React from 'react'
 import Map from '../Map'
-import CalamityModal from '../../Components/Modals/CalamityModal'
+import CalamityModal from '../../components/Modals/CalamityModal'
 
 function Home() {
   return (
