@@ -32,7 +32,7 @@ function MyComponent() {
     useQuery('calamities', async () => {
         const response = await fetch('http://localhost:8000/calamity')
         if (!response.ok) {
-        throw new Error('Network response was not ok')
+        throw new Error ('Network response was not ok')
         }
         return setData(data)
     })
@@ -68,7 +68,7 @@ function MyComponent() {
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center || initialLocaltion}
-      zoom={2}
+      zoom={16}
       onLoad={onLoad}
       onUnmount={() => {}}
     >
