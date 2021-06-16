@@ -10,6 +10,10 @@ const CalamitySchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    city: {
+      type: String,
+      required: true,
+    },
     latitude: {
       type: String,
       required: true,

@@ -12,8 +12,14 @@ class CalamityController {
 
   async create(req, res) {
     try {
-      const { ip, type, latitude, longitude } = req.body;
-      const calamity = await Calamity.create({ ip, type, latitude, longitude });
+      const { ip, type, latitude, longitude, city } = req.body;
+      const calamity = await Calamity.create({
+        ip,
+        type,
+        latitude,
+        longitude,
+        city,
+      });
       return res.status(201).send(calamity);
     } catch (e) {
       return res.status(400).send(e);
