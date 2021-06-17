@@ -2,8 +2,24 @@ import Calamity from '../schemas/Calamity';
 
 class CalamityController {
   async index(req, res) {
+    const { type, city, startDate, endDate } = req.query;
+    const types = type ? type.split(';') : null;
+    const cities = city ? city.split(';') : null;
+    const sDate = startDate ? new Date(startDate) : null;
+    const eDate = endDate ? new Date(endDate) : null;
+    let createdAt = sDate ? { $gte: sDate } : null;
+    createdAt = eDate ? { ...createdAt, $lte: eDate } : createdAt;
+
+    const query = {
+      match: {
+        ...(createdAt && { createdAt: createdAt }),
+        ...(types && { type: types }),
+        ...(cities && { city: cities }),
+      },
+    };
+
     try {
-      const calamities = await Calamity.find();
+      const calamities = await Calamity.find(query?.match);
       return res.send({ calamities });
     } catch (e) {
       return res.status(400).send(e);
@@ -12,8 +28,14 @@ class CalamityController {
 
   async create(req, res) {
     try {
-      const { ip, type, latitude, longitude } = req.body;
-      const calamity = await Calamity.create({ ip, type, latitude, longitude });
+      const { ip, type, latitude, longitude, city } = req.body;
+      const calamity = await Calamity.create({
+        ip,
+        type,
+        latitude,
+        longitude,
+        city,
+      });
       return res.status(201).send(calamity);
     } catch (e) {
       return res.status(400).send(e);
