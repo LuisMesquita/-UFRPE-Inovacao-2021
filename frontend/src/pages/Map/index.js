@@ -27,14 +27,13 @@ function MyComponent() {
     lat: -8.096328999999999,
     lng: -34.927513499999996,
   }
- 
   useEffect(() => {
     useQuery('calamities', async () => {
-        const response = await fetch('http://localhost:8000/calamity')
-        if (!response.ok) {
-        throw new Error ('Network response was not ok')
-        }
-        return setData(data)
+      const response = await fetch('http://localhost:8000/calamity')
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return setData(data)
     })
   }, [])
 
