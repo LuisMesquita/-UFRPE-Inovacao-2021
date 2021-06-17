@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { memo, useState, useCallback, useEffect } from 'react'
 import { GoogleMap, useJsApiLoader, HeatmapLayer } from '@react-google-maps/api'
-import { useQuery } from 'react-query'
 // Components
 // Stylesheet
 import './index.scss'
+import { useCalamities } from '../../api/calamities'
 
 const containerStyle = {
   width: window.innerWidth,
@@ -21,22 +22,13 @@ function MyComponent() {
 
   const [center, setCenter] = useState({})
   const [marks, setMarks] = useState()
-  const [data, setData] = useState()
 
   const initialLocaltion = {
     lat: -8.096328999999999,
     lng: -34.927513499999996,
   }
- 
-  useEffect(() => {
-    useQuery('calamities', async () => {
-        const response = await fetch('http://localhost:8000/calamity')
-        if (!response.ok) {
-        throw new Error ('Network response was not ok')
-        }
-        return setData(data)
-    })
-  }, [])
+
+  const { data } = useCalamities()
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -47,28 +39,35 @@ function MyComponent() {
     })
   }, [])
 
-  useEffect(() => {
-    const { google } = window
-    if (data && isLoaded) {
-      setMarks(
-        data.calamities.map((calamity) =>
-          google.maps.LatLng(calamity.lat, calamity.longitude),
-        ),
-      )
-    }
-  }, [data, isLoaded])
+  //   useEffect(() => {
+  //     const { google } = window
+  //     if (data && isLoaded) {
+  //       setMarks(
+  //         data.calamities.map((calamity) => ({
+  //           location: google.maps.LatLng(calamity.latitude, calamity.longitude),
+  //           weight: 2,
+  //         })),
+  //       )
+  //     }
+  //   }, [data, isLoaded])
 
   const onLoad = useCallback((newMap) => {
     const { google } = window
     const bounds = new google.maps.LatLngBounds()
     newMap.fitBounds(bounds)
+    setMarks([
+      {
+        location: google.maps.LatLng(-8.096328999999999, -34.927513499999996),
+        weight: 2,
+      },
+    ])
   }, [])
 
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center || initialLocaltion}
-      zoom={16}
+      zoom={4}
       onLoad={onLoad}
       onUnmount={() => {}}
     >
