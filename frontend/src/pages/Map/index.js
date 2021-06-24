@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React, { memo, useState, useCallback, useEffect } from 'react'
 import { GoogleMap, useJsApiLoader, HeatmapLayer } from '@react-google-maps/api'
+import { useSelector, useDispatch } from 'react-redux'
 // Components
 // Stylesheet
 import './index.scss'
-import { getCalamities } from '../../api/calamities'
+import { list } from '../../redux/actions/calamities.action'
 
 const containerStyle = {
   width: window.innerWidth,
@@ -18,7 +19,22 @@ const initialLocaltion = {
 
 const googleMapsLibraries = ['drawing', 'visualization', 'places']
 
+const loadMarks = (data, setMarks) => {
+  const { google } = window
+  setMarks(
+    data.map(
+      (calamity) =>
+        new google.maps.LatLng(
+          Number(calamity.latitude),
+          Number(calamity.longitude),
+        ),
+    ),
+  )
+}
+
 function MyComponent() {
+  const dispatch = useDispatch()
+  const { data } = useSelector((state) => state.calamities.filter)
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
@@ -27,7 +43,6 @@ function MyComponent() {
 
   const [center, setCenter] = useState(initialLocaltion)
   const [marks, setMarks] = useState()
-  const { data } = getCalamities()
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -38,6 +53,14 @@ function MyComponent() {
     })
   }, [])
 
+  useEffect(() => {
+    if (data && isLoaded) {
+      loadMarks(data, setMarks)
+    } else {
+      dispatch(list())
+    }
+  }, [data, isLoaded])
+
   const onLoad = useCallback(
     (newMap) => {
       const { google } = window
@@ -45,21 +68,17 @@ function MyComponent() {
       if (data && isLoaded) {
         const bounds = new google.maps.LatLngBounds()
         newMap.fitBounds(bounds)
-        setMarks(
-          data.calamities.map((calamity) => ({
-            location: google.maps.LatLng(calamity.latitude, calamity.longitude),
-            weight: 2,
-          })),
-        )
+        loadMarks(data, setMarks)
       }
     },
     [data],
   )
+
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={4}
+      zoom={14}
       onLoad={onLoad}
       onUnmount={() => {}}
     >

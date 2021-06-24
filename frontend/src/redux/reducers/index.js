@@ -2,9 +2,11 @@
 import { combineReducers } from 'redux'
 // Reducers
 import calamityModal from './calamityModal.reducer'
+import calamities from './calamities.reducer'
 
 const reducers = combineReducers({
   calamityModal,
+  calamities,
 })
 
 const appReducer = (state, action) => {
