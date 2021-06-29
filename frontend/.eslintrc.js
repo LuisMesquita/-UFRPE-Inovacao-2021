@@ -30,5 +30,11 @@ module.exports = {
     'prefer-arrow-callback': 'off',
     'react/react-in-jsx-scope': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
+    'no-restricted-syntax': [
+      'error',
+      'ForInStatement',
+      'LabeledStatement',
+      'WithStatement',
+    ],
   },
 }
