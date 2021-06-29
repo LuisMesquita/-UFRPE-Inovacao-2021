@@ -1,19 +1,13 @@
 import axios from 'axios'
-import { mountQueryString } from '../utils'
+import { useQuery } from 'react-query'
 
-const baseUrl = 'http://localhost:8000/calamity'
-
-export async function getCalamities() {
-  const { data } = await axios.get(baseUrl)
-  return data
+export function getCalamities() {
+  return useQuery('calamities', async () => {
+    const { data } = await axios.get('http://localhost:8000/calamity')
+    return data
+  })
 }
 
-export async function createCalamities(data) {
-  await axios.post(baseUrl, data)
-}
-
-export async function filterCalamities(params) {
-  const { data } = await axios.get(`${baseUrl}${mountQueryString(params)}`)
-
-  return data
+export function createCalamities(data) {
+  axios.post(`http://localhost:8000/calamity`, data)
 }

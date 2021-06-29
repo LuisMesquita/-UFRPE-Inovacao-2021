@@ -36,9 +36,11 @@ const ContentModal = ({ onClose, observer }) => {
   const { register, handleSubmit, control } = useForm()
   const onSubmit = (data) => {
     const { type, ...address } = data
+    console.log({ address })
     getLatFromAddress(JSON.stringify(address)).then(
       (response) => {
         const { lat, lng } = response.results[0].geometry.location
+        console.log(lat, lng)
         createCalamities({
           type,
           latitude: lat,
@@ -47,7 +49,6 @@ const ContentModal = ({ onClose, observer }) => {
         })
       },
       (error) => {
-        // eslint-disable-next-line no-console
         console.error(error)
       },
     )
@@ -67,7 +68,7 @@ const ContentModal = ({ onClose, observer }) => {
                     <GroupItem>
                       <label htmlFor='postal_code'>CEP</label>
                       <ClayInput
-                        onChange={() => {}}
+                        onChange={(e) => console.log(e)}
                         {...register('postal_code', {
                           required: true,
                           pattern: /^\d{5}-\d{3}$/i,
