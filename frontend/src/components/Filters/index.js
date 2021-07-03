@@ -2,19 +2,19 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import Calamity from './Calamity'
 import City from './City'
+import DatePicker from './Date'
 import { filter } from '../../redux/actions/calamities.action'
 
 import './index.scss'
 
 function Filters() {
   const [filters, setFilters] = useState({})
-  const [calamityValue, setCalamityValue] = useState()
-  const [cityValue, setCityValue] = useState()
+  // const [initialDateValue, setInitialDateValue] = useState()
+  // const [endDateValue, setEndDateValue] = useState()
   const dispatch = useDispatch()
 
   const onChangeCalamity = (event) => {
     const value = event?.target?.value
-    setCalamityValue(value)
     let newFilters = {}
     if (value !== 'Calamidade') {
       newFilters = {
@@ -31,7 +31,6 @@ function Filters() {
 
   const onChangeCity = (event) => {
     const value = event?.target?.value
-    setCityValue(value)
     let newFilters = {}
     if (value !== 'Cidade') {
       newFilters = {
@@ -46,10 +45,32 @@ function Filters() {
     dispatch(filter(newFilters))
   }
 
+  const onChangeDate = (key) => (event) => {
+    const value = event?.target?.value
+    let newFilters = {}
+    newFilters = {
+      ...filters,
+      [key]: value,
+    }
+    setFilters(newFilters)
+    dispatch(filter(newFilters))
+  }
+
   return (
     <div className='filters'>
-      <Calamity valueProp={calamityValue} onChange={onChangeCalamity} />
-      <City valueProp={cityValue} onChange={onChangeCity} />
+      <Calamity valueProp={filters?.calamity} onChange={onChangeCalamity} />
+      <City valueProp={filters?.city} onChange={onChangeCity} />
+      <DatePicker
+        label='Data inicial'
+        valueProp={filters?.startDate}
+        onChange={onChangeDate('startDate')}
+      />
+      <DatePicker
+        style={{}}
+        label='Data final'
+        valueProp={filters?.endDate}
+        onChange={onChangeDate('endDate')}
+      />
     </div>
   )
 }
