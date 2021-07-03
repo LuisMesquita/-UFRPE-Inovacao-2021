@@ -6,6 +6,7 @@
     "@clayui/button": "^3.6.0",
     "@clayui/card": "^3.29.0",
     "@clayui/css": "^3.29.0",
+    "@clayui/date-picker": "^3.30.0",
     "@clayui/form": "^3.29.0",
     "@clayui/modal": "^3.29.0",
     "@react-google-maps/api": "^2.1.1",
