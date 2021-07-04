@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { mountQueryString } from '../utils'
 
-const baseUrl = 'http://localhost:8000/calamity'
+const baseUrl = 'http://142.93.13.31:8000/calamity'
 
 export async function getCalamities() {
   const { data } = await axios.get(baseUrl)
